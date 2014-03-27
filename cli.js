@@ -261,7 +261,7 @@ function createTempDir() {
 
     isRhino = require('jsdoc/util/runtime').isRhino();
     tempDirname = 'tmp-' + Date.now() + '-' + getRandomId();
-    tempPath = path.join(os.tempdir(), tempDirname);
+    tempPath = path.join(os.tmpdir(), tempDirname);
     symlinkSrcPath = path.join(tempPath, "node_modules");
     symlinkDstPath = path.join(env.dirname, "node_modules");
 
