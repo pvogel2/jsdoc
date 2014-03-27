@@ -251,6 +251,8 @@ function createTempDir() {
     var isRhino;
     var tempDirname;
     var tempPath;
+    var symlinkSrcPath;
+    var symlinkDstPath;
 
     // We only need one temp directory
     if (props.tmpdir) {
@@ -260,6 +262,8 @@ function createTempDir() {
     isRhino = require('jsdoc/util/runtime').isRhino();
     tempDirname = 'tmp-' + Date.now() + '-' + getRandomId();
     tempPath = path.join(os.tempdir(), tempDirname);
+    symlinkSrcPath = path.join(tempPath, "node_modules");
+    symlinkDstPath = path.join(env.dirname, "node_modules");
 
     try {
         fs.mkdirSync(tempPath);
@@ -267,6 +271,14 @@ function createTempDir() {
     }
     catch (e) {
         logger.fatal('Unable to create the temp directory %s: %s', tempPath, e.message);
+        return null;
+    }
+
+    try {
+        fs.symlinkSync(symlinkDstPath, symlinkSrcPath);
+    }
+    catch (e) {
+        logger.fatal('Unable to create symlink for node_modules in directory %s: %s', tempPath, e.message);
         return null;
     }
 
